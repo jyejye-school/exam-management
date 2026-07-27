@@ -147,6 +147,15 @@ function localIsoDate() {
   ].join("-");
 }
 
+function formatHeaderDate(date = new Date(), compact = false) {
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return compact
+    ? `${month}/${day}`
+    : `${date.getFullYear()}. ${month}. ${day}. (${weekdays[date.getDay()]})`;
+}
+
 function formatUpdatedAt(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "수정 시각 없음";
@@ -3210,6 +3219,8 @@ export function App() {
     ["settings", IconSettings, "설정", true],
     ["packaging", IconPackage, "고사 원안 포장", false],
   ];
+  const headerDate = new Date();
+  const headerDateLabel = formatHeaderDate(headerDate);
 
   return (
     <div className="app-shell">
@@ -3226,6 +3237,16 @@ export function App() {
               <span className="connection-dot" aria-hidden="true" />
               {formatPresenceLabel(presence.status, presence.onlineCount)}
             </span>
+            <time
+              className="header-date-badge"
+              dateTime={localIsoDate()}
+              title={`오늘 날짜 ${headerDateLabel}`}
+              aria-label={`오늘 날짜 ${headerDateLabel}`}
+            >
+              <IconCalendar size={14} aria-hidden="true" />
+              <span className="header-date-full">{headerDateLabel}</span>
+              <span className="header-date-short" aria-hidden="true">{formatHeaderDate(headerDate, true)}</span>
+            </time>
             <span className="idle-badge" title="5분 미사용 시 자동 로그아웃" aria-label="5분 미사용 시 자동 로그아웃">
               <IconClock size={14} aria-hidden="true" />
               <span className="idle-label-full">5분 미사용 시 자동 로그아웃</span>
